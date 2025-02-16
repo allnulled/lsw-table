@@ -1,0 +1,28 @@
+<div class="lsw_table">
+    <div>
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <button class="button_separation" v-on:click="showTransformers">All: {{ transformers.length }}</button>
+            <button class="button_separation" v-on:click="askForFilter">+Filter</button>
+            <button class="button_separation" v-on:click="askForMapper">+Mapper</button>
+            <button class="button_separation" v-on:click="askForReducer">+Reducer</button>
+            <button class="button_separation" v-on:click="askForSorter">+Sorter</button>
+            <div style="flex: 100;"></div>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th v-for="header, headerIndex in headers" v-bind:key="'header-' + headerIndex">
+                    <div>{{ header }}</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="row, rowIndex in output" v-bind:key="'row-' + rowIndex">
+                <td v-for="column, columnIndex in row" v-bind:key="'column-' + columnIndex">
+                    {{ column }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
