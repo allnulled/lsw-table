@@ -1,6 +1,15 @@
-.lsw_table {
+/*
+  @artifact:  Lite Starter Web Dependency
+  @url:       https://github.com/allnulled/lsw-table.git
+  @name:      @allnulled/lsw-table
+  @version:   1.0.0
+*/.lsw_table {
     
 }
 .lsw_table .button_separation {
     margin-left: 4px;
 }
+.lsw_data_implorer {
+    
+}
+

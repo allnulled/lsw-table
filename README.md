@@ -13,7 +13,7 @@ npm i -s @allnulled/lsw-table
 ## Importation
 
 ```html
-<script src="node_modules/@allnulled/lsw-table/lsw-table.compiled.js"></script>
+<script src="node_modules/@allnulled/lsw-table/lsw-table.bundled.js"></script>
 <link rel="stylesheet" type="text/css" href="node_modules/@allnulled/lsw-table/lsw-table.css" />
 ```
 

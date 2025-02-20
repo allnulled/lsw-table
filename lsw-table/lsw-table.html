@@ -1,0 +1,23 @@
+<div class="lsw_table" style="padding: 5px;">
+    <div>
+        <div style="text-align:right;">
+            <button class="button_separation" v-on:click="showTransformers">Transf: {{ transformers.length }}</button>
+        </div>
+    </div>
+    <table class="basic_table">
+        <thead>
+            <tr>
+                <th v-for="header, headerIndex in headers" v-bind:key="'header-' + headerIndex">
+                    <div>{{ header }}</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="row, rowIndex in output" v-bind:key="'row-' + rowIndex">
+                <td v-for="column, columnIndex in row" v-bind:key="'column-' + columnIndex">
+                    {{ column }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,20 +1,3 @@
-/*
-  @artifact:  Lite Starter Web Dependency
-  @url:       https://github.com/allnulled/lsw-table.git
-  @name:      @allnulled/lsw-table
-  @version:   1.0.0
-*/(function(factory) {
-  const mod = factory();
-  if(typeof window !== 'undefined') {
-    window["Lsw_form_controls_components"] = mod;
-  }
-  if(typeof global !== 'undefined') {
-    global["Lsw_form_controls_components"] = mod;
-  }
-  if(typeof module !== 'undefined') {
-    module.exports = mod;
-  }
-})(function() {
 (() => {
   const defaultState = {
 
@@ -29,29 +12,7 @@
   }
 
   Vue.component("LswTable", {
-    template: `<div class="lsw_table" style="padding: 5px;">
-    <div>
-        <div style="text-align:right;">
-            <button class="button_separation" v-on:click="showTransformers">Transf: {{ transformers.length }}</button>
-        </div>
-    </div>
-    <table class="basic_table">
-        <thead>
-            <tr>
-                <th v-for="header, headerIndex in headers" v-bind:key="'header-' + headerIndex">
-                    <div>{{ header }}</div>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row, rowIndex in output" v-bind:key="'row-' + rowIndex">
-                <td v-for="column, columnIndex in row" v-bind:key="'column-' + columnIndex">
-                    {{ column }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>`,
+    template: $template,
     props: {
       initialState: {
         type: Object,
@@ -232,40 +193,3 @@
     }
   });
 })();
-Vue.component("LswTableTransformers", {
-  template: `<div class="lsw_table_transformers">
-    Transformers here.
-    {{ table.transformers }}
-    <div class="flex_row">
-        <button class="button_separation" v-on:click="table.showTransformers">All: {{ table.transformers.length }}</button>
-        <button class="button_separation" v-on:click="table.askForFilter">+Filter</button>
-        <button class="button_separation" v-on:click="table.askForMapper">+Mapper</button>
-        <button class="button_separation" v-on:click="table.askForReducer">+Reducer</button>
-        <button class="button_separation" v-on:click="table.askForSorter">+Sorter</button>
-        <button class="button_separation" v-on:click="table.askForGrouper">+Grouper</button>
-        <div style="flex: 100;"></div>
-    </div>
-</div>`,
-  props: {
-    table: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-
-    };
-  },
-  methods: {
-
-  },
-  watch: {
-
-  },
-  mounted() {
-
-  }
-});
-});
-
