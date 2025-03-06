@@ -1,195 +1,159 @@
-(() => {
-  const defaultState = {
-
-  };
-
-  const predefinedPlaceholders = {
-    filter: `return it.name === 'Carl'`,
-    mapper: `return it.name`,
-    reducer: `return out.concat([it])`,
-    sorter: `return a >= b ? 1 : -1`,
-    modifier: `return all.splice(1,all.length-1,1)`,
-  }
-
-  Vue.component("LswTable", {
-    template: $template,
-    props: {
-      initialState: {
-        type: Object,
-        default: () => ({})
-      },
-      initialInput: {
-        type: Array,
-        default: () => []
-      },
-      initialHeaders: {
-        type: Array,
-        default: () => []
-      }
-    },
-    data() {
-      const state = Object.assign(defaultState, this.initialState);
-      const input = [].concat(this.initialInput);
-      return {
-        headers: this.initialHeaders.length ?? undefined,
-        transformers: [],
-        input,
-        output: undefined,
-        isShowingPanelMain: false,
-
-      };
-    },
-    methods: {
-      cloneInput() {
-        return [].concat(this.input);
-      },
-      askForTransformerOfType(transformerType) {
-        return this.$dialogs.open({
-          template: `
-          <div>
-            <control-box ref="form1" form-id="tempdialog">
-              <hidden-control form-id="tempdialog" name="type" :initial-value="transformerType" />
-              <string-control form-id="tempdialog"
-                name="callbackCode" :multiline="true"
-                :label="'Write the new ' + transformerType + ' here:'"
-                :on-change="v => value.callback = v"
-                :placeholder="predefinedPlaceholders[transformerType]"
-                :css-styles="{textarea:'min-height:80px;'}" />
-            </control-box>
-            <div style="text-align: right; padding-right: 4px;">
-              <button v-on:click="() => accept($refs.form1.getValue())">Añadir</button>
-              <button v-on:click="() => close()">Cancelar</button>
-            </div>
-          </div>
-        `,
-          factory() {
-            return {
-              data() {
-                return {
-                  predefinedPlaceholders,
-                  transformerType,
-                }
-              }
-            }
-          }
-        });
-      },
-      isValidTransformer(transformer) {
-        const isObject = typeof transformer === "object";
-        const hasType = typeof transformer.type === "string";
-        const hasCallbackCode = typeof transformer.callbackCode === "string";
-        const isValid = isObject && hasType && hasCallbackCode;
-        console.log("transformer is " + (isValid ? "Valid" : "Invalid"));
-        let specificArguments = [];
-        if (transformer.type === "filter") {
-          specificArguments = specificArguments.concat(["it", "i"]);
-        } else if (transformer.type === "mapper") {
-          specificArguments = specificArguments.concat(["it", "i"]);
-        } else if (transformer.type === "reducer") {
-          specificArguments = specificArguments.concat(["out", "it", "i"]);
-        } else if (transformer.type === "modifier") {
-          specificArguments = specificArguments.concat(["data"]);
-        } else if (transformer.type === "sorter") {
-          specificArguments = specificArguments.concat(["a", "b"]);
-        }
-        Object.assign(transformer, {
-          callback: new Function(...specificArguments, transformer.callbackCode)
-        });
-        return isValid;
-      },
-      async askForFilter() {
-        const answer = await this.askForTransformerOfType("filter");
-        if (!this.isValidTransformer(answer)) return;
-        this.transformers = this.transformers.concat([answer]);
-      },
-      async askForReducer() {
-        const answer = await this.askForTransformerOfType("reducer");
-        if (!this.isValidTransformer(answer)) return;
-        this.transformers = this.transformers.concat([answer]);
-      },
-      async askForMapper() {
-        const answer = await this.askForTransformerOfType("mapper");
-        if (!this.isValidTransformer(answer)) return;
-        this.transformers = this.transformers.concat([answer]);
-      },
-      async askForReducer() {
-        const answer = await this.askForTransformerOfType("reducer");
-        if (!this.isValidTransformer(answer)) return;
-        this.transformers = this.transformers.concat([answer]);
-      },
-      async askForModifier() {
-        const answer = await this.askForTransformerOfType("modifier");
-        if (!this.isValidTransformer(answer)) return;
-        this.transformers = this.transformers.concat([answer]);
-      },
-      async askForSorter() {
-        const answer = await this.askForTransformerOfType("sorter");
-        if (!this.isValidTransformer(answer)) return;
-        this.transformers = this.transformers.concat([answer]);
-      },
-      async askForGrouper() {
-        const answer = await this.askForTransformerOfType("grouper");
-        if (!this.isValidTransformer(answer)) return;
-        this.transformers = this.transformers.concat([answer]);
-      },
-      showTransformers() {
-        const that = this;
-        return this.$dialogs.open({
-          template: `<lsw-table-transformers :table="table" />`,
-          factory() {
-            return {
-              data() {
-                return {
-                  table: that
-                };
-              }
-            }
-          }
-        });
-      },
-      synchronizeOutput(transformers = this.transformers) {
-        let temporaryData = this.cloneInput();
-        Transform: {
-          for (let index = 0; index < transformers.length; index++) {
-            const transformer = transformers[index];
-            if (transformer.type === "filter") {
-              temporaryData = temporaryData.filter(transformer.callback);
-            } else if (transformer.type === "mapper") {
-              temporaryData = temporaryData.map(transformer.callback);
-            } else if (transformer.type === "reducer") {
-              temporaryData = temporaryData.reduce(transformer.callback, []);
-            } else if (transformer.type === "modifier") {
-              temporaryData = transformer.callback(temporaryData);
-            } else if (transformer.type === "sorter") {
-              temporaryData = temporaryData.sort(transformer.callback);
-            } else if (transformer.type === "grouper") {
-              temporaryData = temporaryData.sort(transformer.callback);
-            } else {
-              throw new Error("Required parameter «transformer.type» to be a valid string on «LswTable.methods.synchronizeOutput»");
-            }
-          }
-        }
-        const temporaryHeaders = new Set();
-        Headers: {
-          for (let index = 0; index < temporaryData.length; index++) {
-            const temporaryRow = temporaryData[index];
-            const temporaryKeys = Object.keys(temporaryRow);
-            temporaryKeys.forEach(k => temporaryHeaders.add(k));
-          }
-        }
-        Update_data: {
-          this.headers = temporaryHeaders;
-          this.output = temporaryData;
-        }
-      }
-    },
-    watch: {
-      transformers(value) {
-        this.synchronizeOutput();
-      }
-    },
-    mounted() {
-      this.synchronizeOutput();
+Vue.component("LswTable", {
+  template: $template,
+  props: {
+    initialInput: {
+      type: Array,
+      default: () => []
     }
-  });
-})();
+  },
+  data() {
+    this.$trace("lsw-table.data");
+    const input = [].concat(this.initialInput);
+    return {
+      input,
+      isShowingMenu: false,
+      isShowingSubpanel: "none",
+      selectedRows: [],
+      extender: "",
+      filter: "",
+      sorter: "",
+      itemsPerPage: 10,
+      currentPage: 0,
+      output: [],
+      paginatedOutput: [],
+      headers: [],
+    };
+  },
+  methods: {
+    goToFirstPage() {
+      this.$trace("lsw-table.methods.goToFirstPage");
+      this.currentPage = 0;
+    },
+    decreasePage() {
+      this.$trace("lsw-table.methods.decreasePage");
+      if (this.currentPage > 0) {
+        this.currentPage--;
+      }
+    },
+    increasePage() {
+      this.$trace("lsw-table.methods.increasePage");
+      const lastPage = Math.floor(this.output.length / this.itemsPerPage);
+      if (this.currentPage < lastPage) {
+        this.currentPage++;
+      }
+    },
+    goToLastPage() {
+      this.$trace("lsw-table.methods.goToLastPage");
+      const lastPage = Math.floor(this.output.length / this.itemsPerPage);
+      if (this.currentPage !== lastPage) {
+        this.currentPage = lastPage;
+      }
+    },
+    toggleRow(rowIndex) {
+      this.$trace("lsw-table.methods.toggleRow");
+      const pos = this.selectedRows.indexOf(rowIndex);
+      if (pos === -1) {
+        this.selectedRows.push(rowIndex);
+      } else {
+        this.selectedRows.splice(pos, 1);
+      }
+    },
+    toggleMenu() {
+      this.$trace("lsw-table.methods.toggleMenu");
+      this.isShowingMenu = !this.isShowingMenu;
+    },
+    digestOutput() {
+      this.$trace("lsw-table.methods.digestOutput");
+      const input = this.input;
+      let temp = [];
+      const extenderExpression = this.extender.trim() || "{}";
+      const extenderFunction = new Function("it", "i", `return ${extenderExpression}`);
+      const filterExpression = this.filter.trim() || "true";
+      const filterFunction = new Function("it", "i", `return ${filterExpression}`);
+      const sorterExpression = this.sorter.trim() || "0";
+      const sorterFunction = new Function("a", "b", `return ${sorterExpression}`);
+      let tempHeaders = new Set();
+      for (let index = 0; index < input.length; index++) {
+        const row = input[index];
+        let extendedRow = undefined;
+        Apply_extender: {
+          try {
+            const extenderProduct = extenderFunction(row, index) || {};
+            extendedRow = Object.assign({}, row, extenderProduct);
+          } catch (error) {
+            extendedRow = Object.assign({}, row);
+          }
+        }
+        Apply_filter: {
+          try {
+            const filterProduct = filterFunction(extendedRow, index);
+            if (filterProduct === true) {
+              temp.push(extendedRow);
+            }
+          } catch (error) {
+            // @OK.
+          }
+        }
+        Extract_headers: {
+          try {
+            Object.keys(extendedRow).forEach(key => {
+              tempHeaders.add(key);
+            });
+          } catch (error) {
+            // @OK.
+          }
+        }
+      }
+      Apply_sorter: {
+        try {
+          temp = temp.sort(sorterFunction);
+        } catch (error) {
+          // @OK.
+        }
+      }
+      this.headers = tempHeaders;
+      this.output = temp;
+      this.digestPagination();
+    },
+    digestPagination() {
+      this.$trace("lsw-table.methods.digestPagination");
+      const page = this.currentPage;
+      const items = this.itemsPerPage;
+      const firstPosition = items * (page);
+      this.selectedRows = [];
+      this.paginatedOutput = [].concat(this.output).splice(firstPosition, items);
+    },
+    saveCurrentTransformer() {
+      this.$trace("lsw-table.methods.saveCurrentTransformer");
+    }
+  },
+  watch: {
+    itemsPerPage(value) {
+      this.$trace("lsw-table.watch.itemsPerPage");
+      this.digestPagination();
+    },
+    currentPage(value) {
+      this.$trace("lsw-table.watch.currentPage");
+      this.digestPagination();
+    }
+  },
+  computed: {
+    hasFiltersApplying() {
+      this.$trace("lsw-table.computed.hasFiltersApplying");
+      if (this.extender.length) {
+        return true;
+      }
+      if (this.filter.length) {
+        return true;
+      }
+      if (this.sorter.length) {
+        return true;
+      };
+      return false;
+    }
+  },
+  mounted() {
+    this.$trace("lsw-table.mounted");
+    this.digestOutput();
+  }
+});
