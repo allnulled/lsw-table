@@ -3,62 +3,106 @@
   @url:       https://github.com/allnulled/lsw-table.git
   @name:      @allnulled/lsw-table
   @version:   1.0.0
-*/.lsw_table {
-    
-}
+*/.lsw_table {}
+
 .lsw_table .button_separation {
     margin-left: 4px;
 }
-.lsw_table_itself {
-    
+
+.lsw_table_itself {}
+
+.lsw_table_viewer {
+    border: 1px solid #333;
+    padding: 4px;
+    overflow: scroll;
+    min-height: 180px;
 }
-table.lsw_table_itself > thead > tr > th {
+
+table.lsw_table_itself>thead>tr>th {
     text-align: left;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
-table.lsw_table_itself > thead > tr > th.table_header {
+
+table.lsw_table_itself .max_row_height {
+    max-height: 25px;
+}
+
+table.lsw_table_itself>thead>tr>th.table_header {
     padding: 4px !important;
     padding-left: 8px !important;
     padding-right: 8px !important;
     text-align: left;
 }
+
+table.lsw_table_itself>thead>tr>th.button_header {
+    padding: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    text-align: center;
+    font-size: 8px;
+}
+
+.lsw_table .title_box {
+    padding: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .table_menu_button {
     background-color: transparent;
     color: black;
     border: 1px solid black;
 }
+
 .table_navigation_menu_cell {
     padding: 0px;
-    padding-top: 4px;
+    padding-top: 0px;
     padding-bottom: 4px;
 }
+
 .table_navigation_menu {
-    border: 3px double #999;
-    border-radius: 2pt;
+    background-color: #DDD;
+    box-shadow: 0 0 4px black;
     border-top-left-radius: 2pt;
     border-top-right-radius: 2pt;
     padding: 4px;
 }
-.lsw_table_itself > tbody > tr > td {
-    max-width: 120px;
+
+.lsw_table_itself>tbody>tr>td {
+    vertical-align: top;
+    max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     border-left: 1px solid #999;
+    padding: 4px;
 }
-.lsw_table_itself > tbody > tr > td:first-child {
+
+.lsw_table_itself>tbody>tr>td:first-child {
     border-left: 0px solid #999;
 }
-.lsw_table_itself > tbody > tr > td.index_cell {
+
+.lsw_table_itself>tbody>tr>td.index_cell {
     text-align: right;
+    vertical-align: top;
 }
-.lsw_table_itself > tbody > tr > td.data_cell {
-    padding: 1px;
+
+.lsw_table_itself>tbody>tr>td.data_cell {
+    padding: 4px;
+    padding-bottom: 0px;
 }
-.lsw_table_itself > tbody > tr > td.data_cell > pre {
+
+.lsw_table_itself>tbody>tr>td.data_cell>* {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.lsw_table_itself>tbody>tr>td.data_cell>pre {
     margin: 0px;
     border: 1px solid #999;
-    border-radius: 2pt;
-    background-color: #DDD;
+    background-color: #FFF;
     font-size: 12px;
     font-family: Arial;
     white-space: pre;
@@ -66,7 +110,18 @@ table.lsw_table_itself > thead > tr > th.table_header {
     padding: 4px;
 }
 
-.lsw_table_itself > tbody > tr.row_for_table.odd {
+.lsw_table_itself>tbody>tr>td.details_cell {
+    padding: 4px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.lsw_table_itself>tbody>tr.row_for_table ul {
+    margin: 0px;
+    padding-bottom: 6px;
+}
+
+.lsw_table_itself>tbody>tr.row_for_table.odd {
     background-color: #BBB;
 }
 
@@ -74,13 +129,24 @@ table.lsw_table_itself > thead > tr > th.table_header {
     font-size: 25px;
     cursor: pointer;
 }
+
 .lsw_table .pagination_button_box {
     padding-left: 1px;
 }
+
 .lsw_table .pagination_button_box.first_box {
     padding-left: 0px;
 }
-.lsw_data_implorer {
-    
+
+.lsw_table_top_panel {
+    background-color: #CCC;
+    padding: 4px;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-shadow: 0 0 4px black;
+    margin-bottom: 4px;
+}
+.lsw_table_top_button {
+    margin-right: 2px;
 }
 
