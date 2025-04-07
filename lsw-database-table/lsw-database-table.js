@@ -19,7 +19,7 @@ Vue.component("LswDatabaseTable", {
     }
   },
   data() {
-
+    return {};
   },
   methods: {
     goToFirstPage() {},

@@ -17,7 +17,7 @@ Vue.component("LswTable", {
         <div class="lsw_table_top_panel">
             <div class="flex_row centered">
                 <div class="flex_1">
-                    <button class="bordered_1 cursor_pointer"
+                    <button class="cursor_pointer"
                         v-on:click="digestOutput">🛜</button>
                 </div>
                 <div class="flex_100 title_box">{{ title }}</div>
