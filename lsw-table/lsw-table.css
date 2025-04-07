@@ -11,6 +11,8 @@
     padding: 4px;
     overflow: scroll;
     min-height: 180px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 table.lsw_table_itself>thead>tr>th {
